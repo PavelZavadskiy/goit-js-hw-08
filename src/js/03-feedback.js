@@ -37,17 +37,23 @@ const throttledFunction = throttle(form_state => {
   saveForm(form_state);
 }, 500);
 
-email.addEventListener('input', evt => {
-  form_state.email = evt.currentTarget.value.trim();
-  throttledFunction(form_state);
-});
-
-message.addEventListener('input', evt => {
-  form_state.message = evt.currentTarget.value.trim();
+form.addEventListener('input', evt => {
+  if (evt.target === email) {
+    form_state.email = evt.target.value.trim();
+  } else if (evt.target === message) {
+    form_state.message = evt.target.value.trim();
+  } else {
+    return;
+  }
   throttledFunction(form_state);
 });
 
 form.addEventListener('submit', evt => {
+  evt.preventDefault();
+  if (form_state.email.length == 0 || form_state.message.length == 0) {
+    alert('All fields must be filled!');
+    return;
+  }
   console.log(form_state);
   form_state = {
     email: '',
